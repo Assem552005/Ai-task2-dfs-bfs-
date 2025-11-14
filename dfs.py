@@ -1,15 +1,30 @@
-def dfs(graph, start):
+def dfs(graph, start, goal):
     visited = {node: False for node in graph}
-    stack = [(start, [start])]
+    parent = {start: None}
+    stack = [start]
 
     while stack:
-        current, path = stack.pop()
+        current = stack.pop()
         if not visited[current]:
-            print(path)
             visited[current] = True
+            
+            if current == goal:
+                path = []
+                node = current
+                while node is not None:
+                    path.append(node)
+                    node = parent[node]
+                path.reverse()
+                print("Path found:", path)
+                return path
+            
             for neighbor in graph[current]:
                 if not visited[neighbor]:
-                    stack.append((neighbor, path + [neighbor]))
+                    parent[neighbor] = current
+                    stack.append(neighbor)
+    
+    print("No path found")
+    return None
 
 graph = {
     0: [1, 2],
@@ -18,4 +33,4 @@ graph = {
     3: [1],
     4: [1, 2]
 }
-dfs(graph, 0)
+dfs(graph, 0, 4)
